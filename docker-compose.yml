@@ -1,0 +1,20 @@
+networks:
+  traefik:
+    external: true
+
+services:
+  arcinc:
+    image: nginx:alpine
+    container_name: arcinc
+    restart: unless-stopped
+    networks:
+      traefik:
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.arcinc.rule=Host(`arcinc.cummings.place`)"
+      - "traefik.http.routers.arcinc.entrypoints=websecure"
+      - "traefik.http.routers.arcinc.service=arcinc"
+      - "traefik.http.services.arcinc.loadbalancer.server.port=80"
